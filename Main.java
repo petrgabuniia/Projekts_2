@@ -44,11 +44,10 @@ public class Main {
 	static String filename = "db.csv";
 
 	public static void main(String[] args) {
-		int choise;
 		String choiseStr;
 
 		loop: while (true) {
-
+            System.out.print("\nPossible comands: ");
 			System.out.println("\n1) About");
 			System.out.println("2) Add");
 			System.out.println("3) Delete");
@@ -58,13 +57,14 @@ public class Main {
             System.out.println("7) Find");
             System.out.println("8) Calculate average");
             System.out.println("9) Exit");
-			System.out.print("\nInput number from 1 till 9: ");
+			System.out.print("\nInsert one of the allowed commads (add, del, print, sort, find, avg or exit): ");
 			
 			choiseStr = sc.nextLine();
+            String comand[] = choiseStr.split(" ");
+            System.out.println(comand[0]);
 			
 			try {
-				choise = Integer.parseInt(choiseStr);
-				if (choise < 1 || choise > 9) {
+				if (!comand[0].equals("find") && !comand[0].equals("avg") && !comand[0].equals("exit") && !comand[0].equals("print") && !comand[0].equals("sort") && !comand[0].equals("add") && !comand[0].equals("del")){
 					throw new Exception();
 				}
 			}
@@ -88,32 +88,36 @@ public class Main {
             }
 			
 
-			switch (choise) {
-                case 1:
-                    about();
-                    break;
-                case 2:
+			switch (comand[0]) {
+                case "add":
                     add();
                     break;
-                case 3:
+                case "del":
                     delete();
                     break;
-                case 4:
+                case "edit":
                     edit();
                     break;
-                case 5:
+                case "print":
                     print(reader);
                     break;
-                case 6:
+                case "sort":
                     sort();
                     break;
-                case 7:
-                    find(reader);
+                case "find":
+                try {
+                    double price = Double.parseDouble(comand[1]);
+                    find(reader, price);
+                } catch (Exception ex) {
+                    System.out.println("Error, please, input number");
+                    continue;
+                }
+                    
                     break;
-                case 8:
+                case "avg":
                     calculateAverage(reader);
                     break;
-                case 9:
+                case "exit":
                     return;
 		    }
 	    }
@@ -187,14 +191,14 @@ public class Main {
         }
     }
 
-    public static void find(BufferedReader reader){
+    public static void find(BufferedReader reader, double price){
         try {
             String line;
             boolean first_tinme = true;
             while ((line = reader.readLine()) != null) {
 
                 String[] el = line.split(";");
-                if(Double.parseDouble(el[4]) < 1000)
+                if(Double.parseDouble(el[4]) < price)
                 {
                     if(first_tinme)
                     {
