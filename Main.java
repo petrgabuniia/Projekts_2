@@ -48,16 +48,15 @@ public class Main {
 
 		loop: while (true) {
             System.out.print("\nPossible comands: ");
-			System.out.println("\n1) About");
-			System.out.println("2) Add");
-			System.out.println("3) Delete");
-			System.out.println("4) Edit");
-			System.out.println("5) Print");
-            System.out.println("6) Sort");
-            System.out.println("7) Find");
-            System.out.println("8) Calculate average");
-            System.out.println("9) Exit");
-			System.out.print("\nInsert one of the allowed commads (add, del, print, sort, find, avg or exit): ");
+			System.out.println("\n1) Add; format: add id city date days price vehicle; adds new trip into the file ");
+			System.out.println("2) Delete; format: del id; deletes trip from the file");
+			System.out.println("3) Edit; format: edit id city date days price vehicle; edits trip in the file");
+			System.out.println("4) Print; format: print; prints all trips from the file");
+            System.out.println("5) Sort; format: sort; sort all trips in the file");
+            System.out.println("6) Find; format: find price; finds trips with price less than given");
+            System.out.println("7) Calculate average; format: avg; calculates and prints average price of all trips");
+            System.out.println("8) Exit; format: exit; exits the program");
+			System.out.print("\nEnter one of the allowed commads (add, del, print, sort, find, avg or exit): ");
 			
 			choiseStr = sc.nextLine();
             String comand[] = choiseStr.split(" ");
@@ -90,33 +89,43 @@ public class Main {
 
 			switch (comand[0]) {
                 case "add":
+                    //TODO
                     add();
                     break;
+
                 case "del":
+                    //TODO
                     delete();
                     break;
+
                 case "edit":
+                    //Todo
                     edit();
                     break;
+
                 case "print":
                     print(reader);
                     break;
+
                 case "sort":
+                    //TODO
                     sort();
                     break;
+
                 case "find":
-                try {
-                    double price = Double.parseDouble(comand[1]);
-                    find(reader, price);
-                } catch (Exception ex) {
-                    System.out.println("Error, please, input number");
-                    continue;
-                }
-                    
+                    try {
+                        double price = Double.parseDouble(comand[1]);
+                        find(reader, price);
+                        } catch (Exception ex) {
+                            System.out.println("wrong price");
+                            continue;
+                        }
                     break;
+
                 case "avg":
                     calculateAverage(reader);
                     break;
+
                 case "exit":
                     return;
 		    }
@@ -136,8 +145,6 @@ public class Main {
     }
 
     public static void print(BufferedReader reader){
-        
-        
         System.out.println("\n----------------------------------------------------------------"); // 64
 		System.out.printf("#   %-4s%-21s%-11s%-6s%-10s%-8s", "ID", "City", "Date", "Days", "Price", "Vehicle");
 		System.out.println("\n----------------------------------------------------------------");
@@ -160,8 +167,6 @@ public class Main {
                 System.out.println(ex.getMessage());
             }
         }
-        
-
     }
 
     public static void calculateAverage(BufferedReader reader){
@@ -176,7 +181,7 @@ public class Main {
                 count++;
             }
             avg = avg / count;
-            System.out.println("average= " + String.format("%.2f", avg));
+            System.out.println("average = " + String.format("%.2f", avg));
         }
         catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -228,14 +233,5 @@ public class Main {
     public static void sort(){
         // TODO insert code here
     }
-
-
-
-
-
-	public static void about() {
-		// TODO insert information about authors
-		System.out.println("231RDB331 Petr Gabuniia");
-	}
 
 }
