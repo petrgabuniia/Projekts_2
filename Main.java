@@ -108,7 +108,7 @@ public class Main {
                     sort();
                     break;
                 case 7:
-                    find();
+                    find(reader);
                     break;
                 case 8:
                     calculateAverage(reader);
@@ -187,8 +187,38 @@ public class Main {
         }
     }
 
-    public static void find(){
-        // TODO insert code here
+    public static void find(BufferedReader reader){
+        try {
+            String line;
+            boolean first_tinme = true;
+            while ((line = reader.readLine()) != null) {
+
+                String[] el = line.split(";");
+                if(Double.parseDouble(el[4]) < 1000)
+                {
+                    if(first_tinme)
+                    {
+                        System.out.println("\n----------------------------------------------------------------"); // 64
+                        System.out.printf("#   %-4s%-21s%-11s%-6s%-10s%-8s", "ID", "City", "Date", "Days", "Price", "Vehicle");
+                        System.out.println("\n----------------------------------------------------------------");
+                        first_tinme = false;
+                    }
+                    System.out.printf("#   %-4s%-21s%-11s%-6s%-10s%-8s%n", el[0], el[1], el[2], el[3], el[4], el[5]);
+                }
+
+            }
+        }
+        catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        finally {
+            try {
+                reader.close();
+            }
+            catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
     }
 
     public static void sort(){
