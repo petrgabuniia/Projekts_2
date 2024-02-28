@@ -72,6 +72,20 @@ public class Main {
 				System.out.println("Error, please, input number from 1 till 10");
 				continue;
 			}
+
+            File f = new File(filename);
+            if (!f.exists()) {
+                System.out.println("The file does not exist.");
+                return;
+            }
+            BufferedReader reader = null;
+
+            try {
+                reader = new BufferedReader(new FileReader(filename));
+            } catch (FileNotFoundException ex) {
+                System.out.println(ex.getMessage());
+                return;
+            }
 			
 
 			switch (choise) {
@@ -88,7 +102,7 @@ public class Main {
                     edit();
                     break;
                 case 5:
-                    print();
+                    print(reader);
                     break;
                 case 6:
                     sort();
@@ -97,7 +111,7 @@ public class Main {
                     find();
                     break;
                 case 8:
-                    calculateAverage();
+                    calculateAverage(reader);
                     break;
                 case 9:
                     return;
@@ -117,20 +131,8 @@ public class Main {
         // TODO insert code here
     }
 
-    public static void print(){
-        File f = new File(filename);
-        if (!f.exists()) {
-			System.out.println("The file does not exist.");
-			return;
-        }
-        BufferedReader reader = null;
-
-        try {
-            reader = new BufferedReader(new FileReader(filename));
-        } catch (FileNotFoundException ex) {
-            System.out.println(ex.getMessage());
-            return;
-        }
+    public static void print(BufferedReader reader){
+        
         
         System.out.println("\n----------------------------------------------------------------"); // 64
 		System.out.printf("#   %-4s%-21s%-11s%-6s%-10s%-8s", "ID", "City", "Date", "Days", "Price", "Vehicle");
@@ -158,15 +160,38 @@ public class Main {
 
     }
 
-    public static void sort(){
-        // TODO insert code here
+    public static void calculateAverage(BufferedReader reader){
+        try {
+            String line;
+            double avg = 0;
+            int count = 0;
+            while ((line = reader.readLine()) != null) {
+
+                String[] el = line.split(";");
+                avg = avg + Double.parseDouble(el[4]);
+                count++;
+            }
+            avg = avg / count;
+            System.out.println("average= " + String.format("%.2f", avg));
+        }
+        catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        finally {
+            try {
+                reader.close();
+            }
+            catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
     }
 
     public static void find(){
         // TODO insert code here
     }
 
-    public static void calculateAverage(){
+    public static void sort(){
         // TODO insert code here
     }
 
