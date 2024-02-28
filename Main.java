@@ -6,6 +6,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -45,6 +49,8 @@ public class Main {
 
 	public static void main(String[] args) {
 		String choiseStr;
+        BufferedReader reader = null;
+        BufferedWriter writer = null;
 
 		loop: while (true) {
             System.out.print("\nPossible comands: ");
@@ -60,7 +66,6 @@ public class Main {
 			
 			choiseStr = sc.nextLine();
             String comand[] = choiseStr.split(" ");
-            System.out.println(comand[0]);
 			
 			try {
 				if (!comand[0].equals("find") && !comand[0].equals("avg") && !comand[0].equals("exit") && !comand[0].equals("print") && !comand[0].equals("sort") && !comand[0].equals("add") && !comand[0].equals("del")){
@@ -77,20 +82,27 @@ public class Main {
                 System.out.println("The file does not exist.");
                 return;
             }
-            BufferedReader reader = null;
+            
 
             try {
                 reader = new BufferedReader(new FileReader(filename));
+                writer = new BufferedWriter(new FileWriter("temp"));
             } catch (FileNotFoundException ex) {
                 System.out.println(ex.getMessage());
+                return;
+            } catch (IOException ex) {
+                System.out.println("Error creating BufferedWriter: " + ex.getMessage());
                 return;
             }
 			
 
 			switch (comand[0]) {
                 case "add":
-                    //TODO
-                    add();
+                    if (comand.length != 7) {
+                        System.out.println("wrong field count");
+                        continue;
+                    }
+                    add(reader, writer, comand);
                     break;
 
                 case "del":
@@ -132,8 +144,81 @@ public class Main {
 	    }
 
     }
-    public static void add(){
-        // TODO insert code here
+    public static void add(BufferedReader reader, BufferedWriter writer, String[] comand){
+        try {
+            String line;
+            try {
+                int id = Integer.parseInt(comand[1]);
+                if (id < 0 || id > 999) {
+                    throw new Exception();
+                }
+            } catch (Exception ex) {
+                System.out.println("wrong id");
+                return;
+            }
+            try {
+                int days = Integer.parseInt(comand[4]);
+                if (days < 1 || days > 365) {
+                    throw new Exception();
+                }
+            } catch (Exception ex) {
+                System.out.println("wrong day count");
+                return;
+            }
+            try {
+                double price = Double.parseDouble(comand[5]);
+            } catch (Exception ex) {
+                System.out.println("wrong price");
+                return;
+            }
+            String date = comand[3];
+            String dates[] = date.split("/");
+            try{
+                int day = Integer.parseInt(dates[0]);
+                int month = Integer.parseInt(dates[1]);
+                int year = Integer.parseInt(dates[2]);
+                if (day < 1 || day > 31 || month < 1 || month > 12) {
+                    throw new Exception();
+                }
+            } catch (Exception ex) {
+                System.out.println("wrong date");
+                return;
+            }
+            String city = comand[2];
+            city = city.toLowerCase();
+            city = city.substring(0, 1).toUpperCase() + city.substring(1);
+            comand[2] = city;
+            String vehicle = comand[6];
+            vehicle = vehicle.toUpperCase();
+            if(!vehicle.equals("TRAIN") && !vehicle.equals("PLANE") && !vehicle.equals("BUS") && !vehicle.equals("BOAT")) {
+                System.out.println("wrong vehicle");
+                return;
+            }
+            while ((line = reader.readLine()) != null) {
+                String els[] = line.split(";");
+                if (els[0].equals(comand[1])) {
+                    System.out.println("wrong id");
+                    return;
+                }
+                writer.write(line);
+                writer.newLine();
+            }
+            
+            writer.write(comand[1] + ";" + comand[2] + ";" + comand[3] + ";" + comand[4] + ";" + comand[5] + ";" + comand[6]);
+            writer.newLine();
+        }
+        catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        finally {
+            try {
+                reader.close();
+                writer.close();
+            }
+            catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
     }
 
     public static void delete(){
