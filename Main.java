@@ -149,7 +149,7 @@ public class Main {
 
                 case "sort":
                     //TODO
-                    sort();
+                    sort(reader, writer);
                     break;
 
                 case "find":
@@ -488,8 +488,57 @@ public class Main {
         }
     }
 
-    public static void sort(){
-        // TODO insert code here
+    public static void sort(BufferedReader reader, BufferedWriter writer){
+        try {
+            String line;
+            String[] lines = new String[1000];
+            int count = 0;
+            while ((line = reader.readLine()) != null) {
+                lines[count] = line;
+                count++;
+            }
+            for (int i = 0; i < count; i++) {
+                for (int j = i + 1; j < count; j++) {
+                    String[] el1 = lines[i].split(";");
+                    String[] el2 = lines[j].split(";");
+                    String date1[] = el1[2].split("/");
+                    String date2[] = el2[2].split("/");
+                    int year1 = Integer.parseInt(date1[2]);
+                    int month1 = Integer.parseInt(date1[1]);
+                    int day1 = Integer.parseInt(date1[0]);
+
+                    int year2 = Integer.parseInt(date2[2]);
+                    int month2 = Integer.parseInt(date2[1]);
+                    int day2 = Integer.parseInt(date2[0]);
+                    if (year1 > year2 || (year1 == year2 && month1 > month2) || (year1 == year2 && month1 == month2 && day1 > day2)){
+                        String temp = lines[i];
+                        lines[i] = lines[j];
+                        lines[j] = temp;
+                    }
+                }
+            }
+            for (int i = 0; i < count; i++) {
+                writer.write(lines[i]);
+                writer.newLine();
+            }
+        }
+        catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        finally {
+            try {
+                reader.close();
+                writer.close();
+            }
+            catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+        File originalFile = new File(filename);
+        File tempFile = new File("temp");
+        originalFile.delete();
+        tempFile.renameTo(originalFile);
+        System.out.println("sorted");
     }
 
 }
