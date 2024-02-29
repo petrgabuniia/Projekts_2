@@ -65,7 +65,12 @@ public class Main {
 			System.out.print("\nEnter one of the allowed commads (add, del, print, sort, find, avg or exit): ");
 			
 			choiseStr = sc.nextLine();
-            String comand[] = choiseStr.split(" ");
+            String comand[] = choiseStr.split(" "); 
+            String input[] = null;
+            if (comand.length != 1)
+            {
+                input = comand[1].split(";");
+            }
 			
 			try {
 				if (!comand[0].equals("find") && !comand[0].equals("avg") && !comand[0].equals("exit") && !comand[0].equals("print") && !comand[0].equals("sort") && !comand[0].equals("add") && !comand[0].equals("del")){
@@ -73,7 +78,7 @@ public class Main {
 				}
 			}
 			catch (Exception ex) {
-				System.out.println("Error, please, input number from 1 till 10");
+				System.out.println("Error, no such comand.");
 				continue;
 			}
 
@@ -98,11 +103,11 @@ public class Main {
 
 			switch (comand[0]) {
                 case "add":
-                    if (comand.length != 7) {
+                    if (input.length != 6) {
                         System.out.println("wrong field count");
                         continue;
                     }
-                    add(reader, writer, comand);
+                    add(reader, writer, input);
                     break;
 
                 case "del":
@@ -165,11 +170,13 @@ public class Main {
 	    }
 
     }
-    public static void add(BufferedReader reader, BufferedWriter writer, String[] comand){
+
+
+    public static void add(BufferedReader reader, BufferedWriter writer, String[] input){
         try {
             String line;
             try {
-                int id = Integer.parseInt(comand[1]);
+                int id = Integer.parseInt(input[0]);
                 if (id < 0 || id > 999) {
                     throw new Exception();
                 }
@@ -178,7 +185,7 @@ public class Main {
                 return;
             }
             try {
-                int days = Integer.parseInt(comand[4]);
+                int days = Integer.parseInt(input[3]);
                 if (days < 1 || days > 365) {
                     throw new Exception();
                 }
@@ -187,12 +194,13 @@ public class Main {
                 return;
             }
             try {
-                double price = Double.parseDouble(comand[5]);
+                double price = Double.parseDouble(input[4]);
+                input[4] = String.format("%.2f", price);
             } catch (Exception ex) {
                 System.out.println("wrong price");
                 return;
             }
-            String date = comand[3];
+            String date = input[2];
             String dates[] = date.split("/");
             try{
                 int day = Integer.parseInt(dates[0]);
@@ -204,19 +212,20 @@ public class Main {
                 System.out.println("wrong date");
                 return;
             }
-            String city = comand[2];
+            String city = input[1];
             city = city.toLowerCase();
             city = city.substring(0, 1).toUpperCase() + city.substring(1);
-            comand[2] = city;
-            String vehicle = comand[6];
+            input[1] = city;
+            String vehicle = input[5];
             vehicle = vehicle.toUpperCase();
             if(!vehicle.equals("TRAIN") && !vehicle.equals("PLANE") && !vehicle.equals("BUS") && !vehicle.equals("BOAT")) {
                 System.out.println("wrong vehicle");
                 return;
             }
+            
             while ((line = reader.readLine()) != null) {
                 String els[] = line.split(";");
-                if (els[0].equals(comand[1])) {
+                if (els[0].equals(input[0])) {
                     System.out.println("wrong id");
                     return;
                 }
@@ -224,7 +233,7 @@ public class Main {
                 writer.newLine();
             }
             
-            writer.write(comand[1] + ";" + comand[2] + ";" + comand[3] + ";" + comand[4] + ";" + comand[5] + ";" + comand[6]);
+            writer.write(input[0] + ";" + input[1] + ";" + input[2] + ";" + input[3] + ";" + input[4] + ";" + input[5]);
             writer.newLine();
         }
         catch (Exception ex) {
