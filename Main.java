@@ -106,8 +106,20 @@ public class Main {
                     break;
 
                 case "del":
-                    //TODO
-                    delete();
+                    if (comand.length != 2) {
+                        System.out.println("wrong field count");
+                        continue;
+                    }
+                    try {
+                        int id = Integer.parseInt(comand[1]);
+                        if (id < 0 || id > 999) {
+                            throw new Exception();
+                        }
+                    } catch (Exception ex) {
+                        System.out.println("wrong id");
+                        continue;
+                    }
+                    delete(reader, writer, comand);
                     break;
 
                 case "edit":
@@ -139,6 +151,15 @@ public class Main {
                     break;
 
                 case "exit":
+                    try 
+                    {
+                        File temp = new File("temp");
+                        temp.delete();
+                        return;
+                    }
+                    catch (Exception ex) {
+
+                    }
                     return;
 		    }
 	    }
@@ -176,7 +197,6 @@ public class Main {
             try{
                 int day = Integer.parseInt(dates[0]);
                 int month = Integer.parseInt(dates[1]);
-                int year = Integer.parseInt(dates[2]);
                 if (day < 1 || day > 31 || month < 1 || month > 12) {
                     throw new Exception();
                 }
@@ -219,11 +239,52 @@ public class Main {
                 System.out.println(ex.getMessage());
             }
         }
-    }
+        File originalFile = new File(filename);
+        File tempFile = new File("temp");
+        originalFile.delete();
+        tempFile.renameTo(originalFile);
+        System.out.println("added");
+}
 
-    public static void delete(){
-        // TODO insert code here
+    public static void delete(BufferedReader reader, BufferedWriter writer, String[] comand){
+       try{
+            String line;
+            boolean found = false;
+            while ((line = reader.readLine()) != null) {
+                String els[] = line.split(";");
+                if (els[0].equals(comand[1])) {
+                    found = true;
+                    continue;
+                }
+                writer.write(line);
+                writer.newLine();
+            }
+            if (!found) {
+                System.out.println("wrong id");
+                return;
+            }
+        }
+
+        catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        finally {
+            try {
+                reader.close();
+                writer.close();
+            }
+            catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+        File originalFile = new File(filename);
+        File tempFile = new File("temp");
+        originalFile.delete();
+        tempFile.renameTo(originalFile);
+        System.out.println("deleted");
     }
+    
+    
 
     public static void edit(){
         // TODO insert code here
