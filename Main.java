@@ -73,7 +73,7 @@ public class Main {
             }
 			
 			try {
-				if (!comand[0].equals("find") && !comand[0].equals("avg") && !comand[0].equals("exit") && !comand[0].equals("print") && !comand[0].equals("sort") && !comand[0].equals("add") && !comand[0].equals("del")){
+				if (!comand[0].equals("find") && !comand[0].equals("avg") && !comand[0].equals("exit") && !comand[0].equals("print") && !comand[0].equals("sort") && !comand[0].equals("add") && !comand[0].equals("del") && !comand[0].equals("edit")){
 					throw new Exception();
 				}
 			}
@@ -103,6 +103,10 @@ public class Main {
 
 			switch (comand[0]) {
                 case "add":
+                    if (input == null) {
+                        System.out.println("wrong field count");
+                        continue;
+                    }
                     if (input.length != 6) {
                         System.out.println("wrong field count");
                         continue;
@@ -128,8 +132,15 @@ public class Main {
                     break;
 
                 case "edit":
-                    //Todo
-                    edit();
+                    if (input == null) {
+                        System.out.println("wrong field count");
+                        continue;
+                    }
+                    if (input.length != 6) {
+                        System.out.println("wrong field count");
+                        continue;
+                    }
+                    edit(reader, writer, input);
                     break;
 
                 case "print":
@@ -295,9 +306,101 @@ public class Main {
     
     
 
-    public static void edit(){
-        // TODO insert code here
+    public static void edit(BufferedReader reader, BufferedWriter writer, String[] input){
+        try {
+            String line;
+            boolean found = false;
+            while ((line = reader.readLine()) != null) {
+                String els[] = line.split(";");
+                if (els[0].equals(input[0])) {
+                    found = true;
+                    try {
+                        if (input[3]!= ""){
+                            int days = Integer.parseInt(input[3]);
+                            if (days < 1 || days > 365) {
+                                throw new Exception();
+                            }
+                            els[3] = input[3];
+                        }
+                    } catch (Exception ex) {
+                        System.out.println("wrong day count");
+                        return;
+                    }
+                    try {
+                        if (input[4] != ""){
+                            double price = Double.parseDouble(input[4]);
+                            els[4] = String.format("%.2f", price);
+                        }
+                    } catch (Exception ex) {
+                        System.out.println("wrong price");
+                        return;
+                    }
+                    String date = input[2];
+                    if (date != ""){
+                        String dates[] = date.split("/");
+                        try{
+                            int day = Integer.parseInt(dates[0]);
+                            int month = Integer.parseInt(dates[1]);
+                            if (day < 1 || day > 31 || month < 1 || month > 12) {
+                                throw new Exception();
+                            }
+                            els[2] = input[2];
+                        } catch (Exception ex) {
+                            System.out.println("wrong date");
+                            return;
+                        }
+                    }
+                    if (input[1] != ""){
+                        String city = input[1];
+                        city = city.toLowerCase();
+                        city = city.substring(0, 1).toUpperCase() + city.substring(1);
+                        els[1] = city;
+                    }
+                    if (input[5] != ""){
+                        String vehicle = input[5];
+                        vehicle = vehicle.toUpperCase();
+                        if(!vehicle.equals("TRAIN") && !vehicle.equals("PLANE") && !vehicle.equals("BUS") && !vehicle.equals("BOAT")) {
+                            System.out.println("wrong vehicle");
+                            return;
+                        }
+                        els[5] = vehicle;
+                    }
+                    writer.write(els[0] + ";" + els[1] + ";" + els[2] + ";" + els[3] + ";" + els[4] + ";" + els[5]);
+                    writer.newLine();
+                    continue;
+                }
+                writer.write(line);
+                writer.newLine();
+            }
+            if (!found) {
+                System.out.println("wrong id");
+                return;
+            }
+
+        }
+        catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        finally {
+            try {
+                reader.close();
+                writer.close();
+            }
+            catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+        File originalFile = new File(filename);
+        File tempFile = new File("temp");
+        originalFile.delete();
+        tempFile.renameTo(originalFile);
+        System.out.println("changed");
+        
     }
+
+
+
+
 
     public static void print(BufferedReader reader){
         System.out.println("\n----------------------------------------------------------------"); // 64
