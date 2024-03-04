@@ -21,26 +21,6 @@ import java.util.Scanner;
 
 //================================================
 
-class Student implements Serializable {
-	public String name;
-	public String surname;
-	public int mark1, mark2, mark3;
-	
-	public Student(String name, String surname, int mark1, int mark2, int mark3) {
-		this.name = name;
-		this.surname = surname;
-		this.mark1 = mark1;
-		this.mark2 = mark2;
-		this.mark3 = mark3;
-	}
-	
-	public void print(int numurs) {
-		System.out.printf("\n%-4d%-15s%-15s%-12d%-12d%-12d", numurs, name, surname, mark1, mark2, mark3);
-	}
-}
-
-//================================================
-
 public class Main {
 
 	static Scanner sc = new Scanner(System.in);
@@ -54,9 +34,9 @@ public class Main {
 
 		loop: while (true) {
             System.out.print("\nPossible comands: ");
-			System.out.println("\n1) Add; format: add id city date days price vehicle; adds new trip into the file ");
+			System.out.println("\n1) Add; format: add id;city;date;days;price;vehicle; adds new trip into the file ");
 			System.out.println("2) Delete; format: del id; deletes trip from the file");
-			System.out.println("3) Edit; format: edit id city date days price vehicle; edits trip in the file");
+			System.out.println("3) Edit; format: edit id;city;date;days;price;vehicle; edits trip in the file");
 			System.out.println("4) Print; format: print; prints all trips from the file");
             System.out.println("5) Sort; format: sort; sort all trips in the file");
             System.out.println("6) Find; format: find price; finds trips with price less than given");
@@ -403,15 +383,15 @@ public class Main {
 
 
     public static void print(BufferedReader reader){
-        System.out.println("\n----------------------------------------------------------------"); // 64
-		System.out.printf("#   %-4s%-21s%-11s%-6s%-10s%-8s", "ID", "City", "Date", "Days", "Price", "Vehicle");
-		System.out.println("\n----------------------------------------------------------------");
+        System.out.println("\n------------------------------------------------------------"); 
+		System.out.printf("%-4s%-21s%-11s%-6s%-10s%-8s", "ID", "City", "Date", "Days", "Price", "Vehicle");
+        System.out.println("\n------------------------------------------------------------"); 
         try {
             String line;
             while ((line = reader.readLine()) != null) {
 
                 String[] el = line.split(";");
-                System.out.printf("#   %-4s%-21s%-11s%-6s%-10s%-8s%n", el[0], el[1], el[2], el[3], el[4], el[5]);
+                System.out.printf("%-4s%-21s%-11s%-6s%-10s%-8s%n", el[0], el[1], el[2], el[3], el[4], el[5]);
             }
         }
         catch (Exception ex) {
